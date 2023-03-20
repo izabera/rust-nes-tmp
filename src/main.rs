@@ -61,19 +61,18 @@ fn _main(_argc: isize, _argv: *const *const u8) -> isize {
 
 
 extern "C" {
-    fn rti_inst() -> !;
+    fn nmi_fn();
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn nmi() -> ! {
+pub unsafe extern "C" fn nmi()  {
     let p = 0xF0 as *mut u8;
     unsafe { *p += 1; };
-    rti_inst();
 }
 
-#[link_section = ".nmi.bork"]
+#[link_section = ".nmi"]
 #[no_mangle]
-pub static NMI_VECTOR: unsafe extern "C" fn() -> ! = nmi;
+pub static NMI_VECTOR: unsafe extern "C" fn() = nmi_fn;
 
 // #[link_section = ".chr_rom"]
 // #[no_mangle]
