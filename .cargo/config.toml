@@ -1,0 +1,12 @@
+[build]
+target = "mos-nes-cnrom-none"
+
+[target.mos-nes-cnrom-none]
+rustflags = [
+  "-C",
+  "link-arg=-Tlink.ld"
+]
+
+
+[unstable]
+build-std = ["core", "alloc"]
