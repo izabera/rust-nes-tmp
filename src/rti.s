@@ -1,2 +1,4 @@
+.section    .text.main,"ax",@progbits
+.globl rti_inst
 
-name: rti
+rti_inst: rti

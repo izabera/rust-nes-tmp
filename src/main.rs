@@ -61,14 +61,14 @@ fn _main(_argc: isize, _argv: *const *const u8) -> isize {
 
 
 extern "C" {
-    fn name() -> !;
+    fn rti_inst() -> !;
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn nmi() -> ! {
     let p = 0xF0 as *mut u8;
     unsafe { *p += 1; };
-    name();
+    rti_inst();
 }
 
 #[link_section = ".nmi.bork"]
