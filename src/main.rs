@@ -31,6 +31,7 @@ fn wait_for_vblank() {
 
 #[start]
 fn _main(_argc: isize, _argv: *const *const u8) -> isize {
+    unsafe { foo_c(); }
     let mut p = 0x100 as *mut u8;
     for ch in "ram write test".chars() {
         unsafe {
@@ -48,7 +49,8 @@ fn _main(_argc: isize, _argv: *const *const u8) -> isize {
     loop {
 
         unsafe { *p2 = 3; };
-        wait_for_vblank();
+        // wait_for_vblank();
+        unsafe { wait_vblank(); }
         unsafe { *p2 = 4; };
         unsafe {
             *p = '#' as u8;
@@ -62,15 +64,16 @@ fn _main(_argc: isize, _argv: *const *const u8) -> isize {
 // "The techniques llvm-mos uses for interrupt handling are somewhat unusual" - https://llvm-mos.org/wiki/C_interrupts
 
 extern "C" {
-    fn foo_c();
+    fn foo_c(); // used to force the C file to link properly (?)
+    fn wait_vblank();
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn nmi_fn()  {
+pub unsafe extern "C" fn render()  {
     let p = 0xF0 as *mut u8;
-    foo_c();
     unsafe { *p += 1; };
 }
+
 
 // #[link_section = ".nmi.foo"]
 // #[no_mangle]
