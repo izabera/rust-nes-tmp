@@ -49,6 +49,7 @@ fn _main(_argc: isize, _argv: *const *const u8) -> isize {
 
         unsafe { *p2 = 3; };
         wait_for_vblank();
+        wait_for_vblank();
         unsafe { *p2 = 4; };
         unsafe {
             *p = '#' as u8;
@@ -59,6 +60,7 @@ fn _main(_argc: isize, _argv: *const *const u8) -> isize {
     0
 }
 
+// "The techniques llvm-mos uses for interrupt handling are somewhat unusual" - https://llvm-mos.org/wiki/C_interrupts
 
 extern "C" {
     fn nmi_fn();
@@ -70,7 +72,7 @@ pub unsafe extern "C" fn nmi()  {
     unsafe { *p += 1; };
 }
 
-#[link_section = ".nmi"]
+#[link_section = ".nmi.test"]
 #[no_mangle]
 pub static NMI_VECTOR: unsafe extern "C" fn() = nmi_fn;
 

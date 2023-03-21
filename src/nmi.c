@@ -1,16 +1,8 @@
-void nmi(); // rust function
+void nmi();
 
-typedef void (*function_type)(void);
-
-/* function_type *const NMI = (function_type *)0xfffA; */
-
-void nmi_fn(void) {
+__attribute__ ((no_isr)) void nmi_fn(void) {
     asm(
-            ".section .nmi_begin,\"axG\",@progbits,nmi\n"
-            ".weak nmi\n"
-            ".globl __default_nmi\n"
-            "nmi:\n"
-            "__default_nmi:\n"
+            ".section .nmi.101,\"axG\",@progbits,nmi\n"
             "  pha\n"
             "  txa\n"
             "  pha\n"
@@ -29,7 +21,3 @@ void nmi_fn(void) {
             "  rti\n"
        );
 }
-
-/* void something_c() { */
-/*   *NMI = nmi_fn; */
-/* } */
