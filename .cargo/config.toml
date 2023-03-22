@@ -5,8 +5,6 @@ target = "mos-nes-cnrom-none"
 rustflags = [
   # "-C",
   # "link-arg=-Tlink.ld",
-  # "-C",
-  # "link-arg=-Wl,-Map=output.map"
 ]
 
 

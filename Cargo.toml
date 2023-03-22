@@ -16,3 +16,6 @@ debug = false
 
 [build-dependencies]
 cc = { version = "1.0"}
+
+[dependencies]
+meta_nestris = { path = "./meta_nestris" }

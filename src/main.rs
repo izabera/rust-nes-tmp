@@ -2,14 +2,16 @@
 #![feature(start)]
 #![allow(unused_imports)]
 
+mod io;
+
+use io::*;
+
 use core::panic::PanicInfo;
+
+use meta_nestris::state::State;
 
 // gym nest ascii 4block
 
-// need to import at least one functions to force the C file to link properly (?)
-extern "C" {
-    fn wait_vblank();
-}
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
@@ -27,67 +29,25 @@ fn panic(_info: &PanicInfo) -> ! {
 #[start]
 fn _main(_argc: isize, _argv: *const *const u8) -> isize {
     let mut p = 0x100 as *mut u8;
-    for ch in "ram write test".chars() {
-        unsafe {
-            *p = ch as u8;
-            p = p.add(1);
-        }
-    }
+
+    State::new();
 
     ppu_ctrl(0x80);
     ppu_mask(0x1E);
 
     loop {
 
-        unsafe { wait_vblank(); }
+        wait_for_vblank();
         unsafe {
             *p += 1;
         }
     }
 }
 
-fn ppu_ctrl(value: u8) {
-    let p = 0x2000 as *mut u8;
-    unsafe {
-        core::ptr::write_volatile(p, value);
-    }
-}
-
-fn ppu_mask(value: u8) {
-    let p = 0x2001 as *mut u8;
-    unsafe {
-        core::ptr::write_volatile(p, value);
-    }
-}
-
-fn ppu_addr(value: u16) {
-    let p = 0x2006 as *mut u8;
-    unsafe {
-        core::ptr::write_volatile(p, (value >> 8) as u8);
-        core::ptr::write_volatile(p, value as u8);
-    }
-}
-
-fn ppu_data(value: u8) {
-    let p = 0x2007 as *mut u8;
-    unsafe {
-        core::ptr::write_volatile(p, value);
-    }
-}
-
-fn ppu_scroll(x: u8, y: u8) {
-    let p = 0x2005 as *mut u8;
-    unsafe {
-        core::ptr::write_volatile(p, x);
-        core::ptr::write_volatile(p, y);
-    }
-}
-
-
 #[no_mangle]
-pub unsafe extern "C" fn render()  {
+pub extern "C" fn render()  {
     let p = 0xF0 as *mut u8;
-    unsafe { *p += 1; };
+    unsafe { *p += 1; }
 
     ppu_addr(0x2008);
 
@@ -105,8 +65,8 @@ pub unsafe extern "C" fn render()  {
 
     }
 
-
-    ppu_addr(0x2000); // reset scroll
+    // reset scroll
+    ppu_addr(0x2000);
     ppu_scroll(0, 0);
 }
 
