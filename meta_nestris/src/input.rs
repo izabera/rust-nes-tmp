@@ -19,21 +19,6 @@ impl Input {
         Self::None
     }
 
-    pub fn from_fm2_string(string: &String) -> Result<Input, String> {
-        if string.len() != 8 {
-            return Err("cannot create input from fm2 string of length != 8".into());
-        }
-
-        let mut input_byte = 0;
-        for character in string.chars() {
-            let state = character != ' ' && character != '.';
-            input_byte >>= 1;
-            input_byte |= if state { 0x80 } else { 0 };
-        }
-
-        Ok(Input::from(input_byte))
-    }
-
     #[must_use]
     pub fn get(self, button: Input) -> bool {
         self & button != 0

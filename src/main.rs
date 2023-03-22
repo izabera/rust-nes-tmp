@@ -4,7 +4,6 @@
 
 mod io;
 mod ppu;
-mod engine;
 
 // gym nest ascii 4block
 
@@ -18,6 +17,13 @@ mod engine;
 #[start]
 fn _main(_argc: isize, _argv: *const *const u8) -> isize {
     let mut p = 0x100 as *mut u8;
+
+
+    let mut p2 = 0x80 as *mut [u8; 3];
+
+    unsafe {
+        *p2 = [2, 4, 8];
+    }
 
     ppu::write_addr(0x2042);
     ppu::draw_text("Public domain roms??");

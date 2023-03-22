@@ -1,8 +1,7 @@
-use enum_primitive_derive::Primitive;
 use once_cell::sync::Lazy;
 use std::iter::once;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Primitive)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Piece {
     TUp = 0,
     TRight = 1,
@@ -98,16 +97,16 @@ impl Piece {
         &TILE_OFFSETS[self as usize]
     }
 
-    fn get_rotation_cycles() -> &'static [Vec<Piece>; 7] {
-        static ROTATION_CYCLES: Lazy<[Vec<Piece>; 7]> = Lazy::new(|| {
+    fn get_rotation_cycles() -> &'static [&'static [Piece]; 7] {
+        static ROTATION_CYCLES: Lazy<[&[Piece]; 7]> = Lazy::new(|| {
             [
-                vec![Piece::TUp, Piece::TRight, Piece::TDown, Piece::TLeft],
-                vec![Piece::JUp, Piece::JRight, Piece::JDown, Piece::JLeft],
-                vec![Piece::ZHorizontal, Piece::ZVertical],
-                vec![Piece::O],
-                vec![Piece::SHorizontal, Piece::SVertical],
-                vec![Piece::LUp, Piece::LRight, Piece::LDown, Piece::LLeft],
-                vec![Piece::IHorizontal, Piece::IVertical],
+                [Piece::TUp, Piece::TRight, Piece::TDown, Piece::TLeft].as_slice(),
+                [Piece::JUp, Piece::JRight, Piece::JDown, Piece::JLeft].as_slice(),
+                [Piece::ZHorizontal, Piece::ZVertical].as_slice(),
+                [Piece::O].as_slice(),
+                [Piece::SHorizontal, Piece::SVertical].as_slice(),
+                [Piece::LUp, Piece::LRight, Piece::LDown, Piece::LLeft].as_slice(),
+                [Piece::IHorizontal, Piece::IVertical].as_slice(),
             ]
         });
 
