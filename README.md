@@ -1,5 +1,6 @@
-uses https://github.com/mrk-its/rust-mos
-read more https://llvm-mos.org/wiki/Rust
+uses https://llvm-mos.org and https://github.com/mrk-its/rust-mos read more https://llvm-mos.org/wiki/Rust 
+
+public domain font https://opengameart.org/content/intrepid-monochrome-8-bit-font
 
 building;
 
