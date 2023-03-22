@@ -1,14 +1,14 @@
-void render();
+// "The techniques llvm-mos uses for interrupt handling are somewhat unusual" - https://llvm-mos.org/wiki/C_interrupts
 
-void foo_c(void) {}
+void render();
 
 void wait_vblank(void) {
     asm(
         "lda #$00\n"
-        "sta $33\n"
+        "sta $10\n"
         "nop\n"
 "checkForNmi:\n"
-        "lda $33\n"
+        "lda $10\n"
         "beq checkForNmi\n"
     );
 }
@@ -21,7 +21,7 @@ __attribute__ ((no_isr)) void nmi(void) {
             "  tya\n"
             "  pha\n"
             "  lda #$1\n"
-            "  sta $33\n"
+            "  sta $10\n"
        );
     render();
     asm(

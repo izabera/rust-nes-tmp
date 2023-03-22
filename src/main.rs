@@ -6,6 +6,11 @@ use core::panic::PanicInfo;
 
 // gym nest ascii 4block
 
+// need to import at least one functions to force the C file to link properly (?)
+extern "C" {
+    fn wait_vblank();
+}
+
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
     // TODO: panic handler
@@ -31,7 +36,6 @@ fn wait_for_vblank() {
 
 #[start]
 fn _main(_argc: isize, _argv: *const *const u8) -> isize {
-    unsafe { foo_c(); }
     let mut p = 0x100 as *mut u8;
     for ch in "ram write test".chars() {
         unsafe {
@@ -39,40 +43,54 @@ fn _main(_argc: isize, _argv: *const *const u8) -> isize {
             p = p.add(1);
         }
     }
-    let p2 = 0xF1 as *mut u8;
-        unsafe { *p2 = 1; };
+
     let ctrl = PPUCTRL as *mut u8;
-    unsafe {
-        *ctrl = 0x80;
-    }
-        unsafe { *p2 = 2; };
+    unsafe { *ctrl = 0x80; }
     loop {
 
-        unsafe { *p2 = 3; };
         unsafe { wait_vblank(); }
-        unsafe { *p2 = 4; };
         unsafe {
-            *p = '#' as u8;
-            p = p.add(1);
+            *p += 1;
         }
-        unsafe { *p2 = 5; };
     }
     0
 }
 
-// "The techniques llvm-mos uses for interrupt handling are somewhat unusual" - https://llvm-mos.org/wiki/C_interrupts
-
-extern "C" {
-    fn foo_c(); // used to force the C file to link properly (?)
-    fn wait_vblank();
+fn ppu_addr(high: u8, low: u8) {
+    let p = 0x2006 as *mut u8;
+    unsafe {
+        *p = high;
+        *p = low;
+    }
 }
+
+fn ppu_data(value: u8) {
+    let p = 0x2007 as *mut u8;
+    unsafe { *p = value; }
+}
+
+fn ppu_scroll(x: u8, y: u8) {
+    let p = 0x2005 as *mut u8;
+    unsafe {
+        *p = x;
+        *p = y;
+    }
+}
+
 
 #[no_mangle]
 pub unsafe extern "C" fn render()  {
     let p = 0xF0 as *mut u8;
     unsafe { *p += 1; };
+
+
+    ppu_addr(0x20, 0x05);
+    ppu_data(5);
+    ppu_data(6);
+    // ppu_scroll(0, 0);
 }
 
-// #[link_section = ".chr_rom"]
-// #[no_mangle]
-// pub static POOP: &[u8] = &[ 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, ];
+
+#[link_section = ".chr_rom"]
+#[no_mangle]
+pub static TILES: [u8; 4096] = *include_bytes!("./tiles.chr");
