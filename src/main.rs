@@ -8,10 +8,13 @@ use io::*;
 
 use core::panic::PanicInfo;
 
-use meta_nestris::state::State;
-
 // gym nest ascii 4block
 
+
+// TODO
+// controller
+// sprites
+// allocate / meta
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
@@ -29,8 +32,6 @@ fn panic(_info: &PanicInfo) -> ! {
 #[start]
 fn _main(_argc: isize, _argv: *const *const u8) -> isize {
     let mut p = 0x100 as *mut u8;
-
-    State::new();
 
     ppu_ctrl(0x80);
     ppu_mask(0x1E);
