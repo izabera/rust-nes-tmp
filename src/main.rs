@@ -14,6 +14,8 @@ mod ppu;
 // 0x800 of ram
 // 0x100 of OAM
 
+// only load one seed at a time
+
 #[start]
 fn _main(_argc: isize, _argv: *const *const u8) -> isize {
     let mut p = 0x100 as *mut u8;

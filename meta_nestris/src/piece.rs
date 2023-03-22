@@ -1,5 +1,4 @@
-use once_cell::sync::Lazy;
-use std::iter::once;
+use core::iter::once;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Piece {
@@ -28,7 +27,7 @@ pub enum Piece {
 impl Piece {
     #[must_use]
     pub fn get_clockwise_rotation(self) -> Self {
-        static CLOCKWISE_ROTATIONS: Lazy<[Piece; 19]> = Lazy::new(|| {
+        const fn generate_clockwise_rotations() -> [Piece; 19] {
             let mut rotations = [Piece::None; 19];
 
             let pairs = Piece::get_rotation_cycles().iter().flat_map(|cycle| {
@@ -37,19 +36,22 @@ impl Piece {
                     .zip(cycle.iter().skip(1).chain(once(cycle.first().unwrap())))
             });
 
-            for (first, second) in pairs {
+            pairs.for_each(|(first, second)| {
                 rotations[*first as usize] = *second;
-            }
+
+            });
 
             rotations
-        });
+        }
+
+        const CLOCKWISE_ROTATIONS: [Piece; 19] = generate_clockwise_rotations();
 
         CLOCKWISE_ROTATIONS[self as usize]
     }
 
     #[must_use]
     pub fn get_counterclockwise_rotation(self) -> Self {
-        static COUNTERCLOCKWISE_ROTATIONS: Lazy<[Piece; 19]> = Lazy::new(|| {
+        const fn generate_counterclockwise_rotations() -> [Piece; 19] {
             let mut rotations = [Piece::None; 19];
 
             let pairs = Piece::get_rotation_cycles().iter().flat_map(|cycle| {
@@ -65,7 +67,9 @@ impl Piece {
             }
 
             rotations
-        });
+        }
+
+        const COUNTERCLOCKWISE_ROTATIONS: [Piece; 19] = generate_counterclockwise_rotations();
 
         COUNTERCLOCKWISE_ROTATIONS[self as usize]
     }
@@ -98,7 +102,7 @@ impl Piece {
     }
 
     fn get_rotation_cycles() -> &'static [&'static [Piece]; 7] {
-        static ROTATION_CYCLES: Lazy<[&[Piece]; 7]> = Lazy::new(|| {
+        static ROTATION_CYCLES: [&[Piece]; 7] =
             [
                 [Piece::TUp, Piece::TRight, Piece::TDown, Piece::TLeft].as_slice(),
                 [Piece::JUp, Piece::JRight, Piece::JDown, Piece::JLeft].as_slice(),
@@ -107,8 +111,7 @@ impl Piece {
                 [Piece::SHorizontal, Piece::SVertical].as_slice(),
                 [Piece::LUp, Piece::LRight, Piece::LDown, Piece::LLeft].as_slice(),
                 [Piece::IHorizontal, Piece::IVertical].as_slice(),
-            ]
-        });
+            ];
 
         &ROTATION_CYCLES
     }
