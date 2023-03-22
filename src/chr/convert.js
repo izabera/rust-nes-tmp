@@ -1,5 +1,21 @@
 const fs = require('fs');
 
+process.nextTick(() => {
+    const [, , param0, param1] = process.argv;
+
+    if (param0 && param1) {
+        // convert one file
+        png2chr(param0, param1);
+    } else if (param0) {
+        // convert all PNG in a directory
+        fs.readdirSync(param0)
+            .filter(name => name.endsWith('.png'))
+            .forEach(name => {
+                png2chr(param0 + '/' + name, param0 + '/' + name.replace('.png', '.chr'));
+            });
+    }
+});
+
 function png2chr(inFile, outFile) {
     const png = module.exports.PNG.sync.read(fs.readFileSync(inFile));
 
@@ -68,22 +84,6 @@ function png2chr(inFile, outFile) {
 
     fs.writeFileSync(outFile, Uint8Array.from(bytes));
 }
-
-process.nextTick(() => {
-    const [, , param0, param1] = process.argv;
-
-    if (param0 && param1) {
-        // convert one file
-        png2chr(param0, param1);
-    } else if (param0) {
-        // convert all PNG in a directory
-        fs.readdirSync(param0)
-            .filter(name => name.endsWith('.png'))
-            .forEach(name => {
-                png2chr(param0 + '/' + name, param0 + '/' + name.replace('.png', '.chr'));
-            });
-    }
-});
 
 // pngjs2 library follows...
 

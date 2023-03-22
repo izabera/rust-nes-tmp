@@ -32,8 +32,6 @@ fn _main(_argc: isize, _argv: *const *const u8) -> isize {
 
     ppu::write_addr(0x22C5);
     ppu::draw_text("very cool (~'v')~");
-    // ppu::write_addr(0x20C6);
-    // ppu::draw_text(&"very cool (~'v')~".to_string());
 
     ppu::write_ctrl(0x80);
     ppu::write_mask(0x1E);
