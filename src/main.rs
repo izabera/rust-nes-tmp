@@ -74,4 +74,4 @@ pub extern "C" fn render()  {
 
 #[link_section = ".chr_rom"]
 #[no_mangle]
-pub static TILES: [u8; 4096] = *include_bytes!("./tiles.chr");
+pub static TILES: [u8; 4096] = *include_bytes!("./chr/tiles.chr");

@@ -43,3 +43,9 @@ pub fn ppu_scroll(x: u8, y: u8) {
         core::ptr::write_volatile(p, y);
     }
 }
+
+pub fn draw_text(text: &str) {
+    for ch in text.chars() {
+        ppu_data(ch as u8 - 55);
+    }
+}
