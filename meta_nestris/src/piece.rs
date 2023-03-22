@@ -38,7 +38,6 @@ impl Piece {
 
             pairs.for_each(|(first, second)| {
                 rotations[*first as usize] = *second;
-
             });
 
             rotations
@@ -62,9 +61,9 @@ impl Piece {
                     .zip(cycle.iter())
             });
 
-            for (first, second) in pairs {
+            pairs.for_each(|(first, second)| {
                 rotations[*first as usize] = *second;
-            }
+            });
 
             rotations
         }

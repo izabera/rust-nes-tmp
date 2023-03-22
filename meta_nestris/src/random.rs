@@ -1,12 +1,10 @@
-use once_cell::sync::Lazy;
-
 use crate::piece::Piece;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Random {
-    pub index: u16,
     pub piece_counter: u8,
     pub last_piece: Piece,
+    pub value: u16,
 }
 
 impl Random {
@@ -15,15 +13,15 @@ impl Random {
     #[must_use]
     pub fn new() -> Self {
         Self {
-            index: 0,
             piece_counter: 0,
             last_piece: Piece::TUp,
+            value: 0x8988,
         }
     }
 
     pub fn cycle(&mut self) {
-        self.index += 1;
-        self.index %= Self::RNG_STATES_COUNT;
+        let new_bit = ((self.value >> 9) ^ (self.value >> 1)) & 1;
+        self.value = (new_bit << 15) | (self.value >> 1);
     }
 
     pub fn cycle_multiple(&mut self, count: usize) {
@@ -43,20 +41,7 @@ impl Random {
 
     #[must_use]
     pub fn get_value(&self) -> u8 {
-        static RNG_VALUES: Lazy<[u8; Random::RNG_STATES_COUNT as usize]> = Lazy::new(|| {
-            let mut values = [0; Random::RNG_STATES_COUNT as usize];
-
-            let mut current: u16 = 0x8988;
-            for value in values.iter_mut() {
-                *value = (current >> 8) as u8;
-
-                let new_bit = ((current >> 9) ^ (current >> 1)) & 1;
-                current = (new_bit << 15) | (current >> 1);
-            }
-            values
-        });
-
-        RNG_VALUES[usize::from(self.index)]
+        (self.value >> 8) as u8
     }
 
     pub fn get_piece(&mut self) -> Piece {
