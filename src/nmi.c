@@ -5,10 +5,10 @@ void render();
 void wait_vblank(void) {
     asm(
         "lda #$00\n"
-        "sta $10\n"
+        "sta $F\n"
         "nop\n"
 "checkForNmi:\n"
-        "lda $10\n"
+        "lda $F\n"
         "beq checkForNmi\n"
     );
 }
@@ -21,7 +21,7 @@ __attribute__ ((no_isr)) void nmi(void) {
             "  tya\n"
             "  pha\n"
             "  lda #$1\n"
-            "  sta $10\n"
+            "  sta $F\n"
        );
     render();
     asm(

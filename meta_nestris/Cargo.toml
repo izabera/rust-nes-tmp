@@ -1,0 +1,15 @@
+[package]
+name = "meta_nestris"
+version = "0.2.0"
+edition = "2021"
+
+[dependencies]
+# bitmask-enum = "=2.1.0"
+# bitvec = "=1.0.1"
+# enum-primitive-derive = "=0.2.2"
+# num-traits = "=0.2.15"
+# once_cell = "=1.16.0"
+
+[dev-dependencies]
+serde = { version = "=1.0.148", features = ["derive"] }
+serde_yaml = "=0.9.14"

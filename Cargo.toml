@@ -18,4 +18,4 @@ debug = false
 cc = { version = "1.0"}
 
 [dependencies]
-# meta_nestris = { path = "./meta_nestris" }
+meta_nestris = { path = "./meta_nestris" }
