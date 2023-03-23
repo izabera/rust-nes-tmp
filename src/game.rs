@@ -18,7 +18,10 @@ pub fn allocate_state() {
 }
 
 pub fn frame() {
+    unsafe {
+        (*state_ptr()).step(Input::from(crate::io::controller_buttons()));
 
+    }
 }
 
 pub fn render() {

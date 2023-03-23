@@ -27,3 +27,7 @@ pub fn poll_controller() {
         }
     }
 }
+
+pub fn controller_buttons() -> u8 {
+    unsafe { *(BUTTONS as *mut u8) }
+}

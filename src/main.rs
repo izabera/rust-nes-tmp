@@ -9,11 +9,9 @@ mod game;
 // gym nest ascii 4block
 
 // TODO
-// controller
 // sprites
 // 0x800 of ram
 // 0x100 of OAM
-// *mut Struct
 // remove unneeded derives
 
 // memory usage;
