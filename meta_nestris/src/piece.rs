@@ -1,5 +1,25 @@
 use core::iter::once;
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Tile {
+    Empty,
+    A,
+    B,
+    C,
+}
+
+impl From<Piece> for Tile {
+    fn from(piece: Piece) -> Self {
+        match piece as usize {
+            0..=3 | 10 | 17 | 18 => Tile::A,
+            4..=7 | 11 | 12 => Tile::B,
+            8 | 9 | 13..=16 => Tile::C,
+            19 => Tile::Empty,
+            _ => unreachable!(),
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Piece {
     TUp = 0,

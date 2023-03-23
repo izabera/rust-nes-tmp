@@ -10,11 +10,11 @@ mod ppu;
 // TODO
 // controller
 // sprites
-// allocate / meta
 // 0x800 of ram
 // 0x100 of OAM
+// *mut Struct
 
-// only load one seed at a time
+// remove unneeded derives
 
 #[start]
 fn _main(_argc: isize, _argv: *const *const u8) -> isize {
