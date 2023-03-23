@@ -8,8 +8,6 @@ pub struct Random {
 }
 
 impl Random {
-    const RNG_STATES_COUNT: u16 = 32767;
-
     #[must_use]
     pub fn new() -> Self {
         Self {
