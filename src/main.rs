@@ -4,6 +4,7 @@
 
 mod io;
 mod ppu;
+mod game;
 
 // gym nest ascii 4block
 
@@ -13,19 +14,17 @@ mod ppu;
 // 0x800 of ram
 // 0x100 of OAM
 // *mut Struct
-
 // remove unneeded derives
+
+// memory usage;
+// 0xE - buttons
+// 0xF - nmi check bit
+// 0x300+ - game state
 
 #[start]
 fn _main(_argc: isize, _argv: *const *const u8) -> isize {
-    let mut p = 0x100 as *mut u8;
 
-
-    let mut p2 = 0x80 as *mut [u8; 3];
-
-    unsafe {
-        *p2 = [2, 4, 8];
-    }
+    game::allocate_state();
 
     ppu::write_addr(0x2042);
     ppu::draw_text("Public domain roms??");
@@ -38,23 +37,24 @@ fn _main(_argc: isize, _argv: *const *const u8) -> isize {
 
     loop {
         io::wait_for_vblank();
-        unsafe {
-            *p += 1;
-        }
+        game::frame();
     }
 }
 
 #[no_mangle]
 pub extern "C" fn render()  {
+    game::render();
+
+    io::poll_controller();
+
     let p = 0xF0 as *mut u8;
     unsafe { *p += 1; }
-
 
     ppu::write_addr(0x2180 + (unsafe { *p >> 2 } % 32) as u16);
     ppu::draw_text(" WOW! ");
 
     ppu::write_addr(0x21A0);
-    for i in 0..0x4 {
+    for _ in 0..0x4 {
         ppu::draw_text(" ");
     }
 
