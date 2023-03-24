@@ -5,7 +5,7 @@
 /// [`MenuState`](crate::menu_state::MenuState) and
 /// [`GameplayState`](crate::gameplay_state::GameplayState).
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct Modifier {
     /// Prevents the score from being capped at 999999.
     pub uncapped_score: bool,

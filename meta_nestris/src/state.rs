@@ -10,7 +10,6 @@ use crate::{
 ///
 /// The `MODIFIER` const generic specifies game modifiers - see [`Modifier`] for
 /// supported modifiers.
-#[derive(Clone, Debug)]
 pub enum State<const MODIFIER: Modifier> {
     MenuState(MenuState<MODIFIER>),
     GameplayState(GameplayState<MODIFIER>),

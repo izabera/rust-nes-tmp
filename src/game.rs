@@ -1,4 +1,4 @@
-use meta_nestris::{State, Input, GameType, Modifier};
+use meta_nestris::{State, Input, GameType, Modifier, MenuMode};
 
 static STATE_ADDR: u16 = 0x300;
 
@@ -18,12 +18,33 @@ pub fn allocate_state() {
 }
 
 pub fn frame() {
+    let input = Input::from(crate::io::controller_buttons());
     unsafe {
-        (*state_ptr()).step(Input::from(crate::io::controller_buttons()));
-
-    }
+        (*state_ptr()).step(input)
+    };
 }
 
-pub fn render() {
+use crate::ppu;
 
+pub fn render() {
+    ppu::write_addr(0x2205);
+
+
+    match  unsafe { &*state_ptr() } {
+        State::MenuState(state) => {
+            use MenuMode::*;
+            let text = match state.menu_mode {
+                CopyrightScreen => "legal",
+                TitleScreen => "title",
+                GameTypeSelect => "game type",
+                LevelSelect => "levelselect",
+                InitializingGame => "???",
+            };
+            ppu::draw_text(text);
+        },
+        State::GameplayState(state) => {
+
+    ppu::draw_text("GAME");
+        },
+    }
 }

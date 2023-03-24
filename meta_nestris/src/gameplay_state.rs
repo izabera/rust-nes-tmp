@@ -7,7 +7,7 @@ use crate::{
 ///
 /// The `MODIFIER` const generic specifies game modifiers - see [`Modifier`] for
 /// supported modifiers.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct GameplayState<const MODIFIER: Modifier> {
     // each field is listed with its equivalent from the base game
     pub dead: bool,   // $68 == #10, once true never changes back to false

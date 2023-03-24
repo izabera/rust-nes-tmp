@@ -2,22 +2,30 @@
 #![feature(start)]
 #![allow(unused_imports)]
 
+// attribution
+// tetris - maya!, ejona
+// programming - llvm-mos, rust-mos, j`ey
+
 mod io;
 mod ppu;
 mod game;
 
 // gym nest ascii 4block
+// vn / bp
 
 // TODO
 // sprites
 // 0x800 of ram
 // 0x100 of OAM
-// remove unneeded derives
 
 // memory usage;
 // 0xE - buttons
 // 0xF - nmi check bit
 // 0x300+ - game state
+//
+// the compiler also seems to use some addresses
+// I'm not sure why yet
+// I just try and avoid them
 
 #[start]
 fn _main(_argc: isize, _argv: *const *const u8) -> isize {
@@ -45,16 +53,16 @@ pub extern "C" fn render()  {
 
     io::poll_controller();
 
-    let p = 0xF0 as *mut u8;
-    unsafe { *p += 1; }
+    // let p = 0xF0 as *mut u8;
+    // unsafe { *p += 1; }
 
-    ppu::write_addr(0x2180 + (unsafe { *p >> 2 } % 32) as u16);
-    ppu::draw_text(" WOW! ");
+    // ppu::write_addr(0x2180 + (unsafe { *p >> 2 } % 32) as u16);
+    // ppu::draw_text(" WOW! ");
 
-    ppu::write_addr(0x21A0);
-    for _ in 0..0x4 {
-        ppu::draw_text(" ");
-    }
+    // ppu::write_addr(0x21A0);
+    // for _ in 0..0x4 {
+    //     ppu::draw_text(" ");
+    // }
 
     // reset scroll
     ppu::write_addr(0x2000);
@@ -67,10 +75,10 @@ pub extern "C" fn render()  {
 pub static TILES: [u8; 4096] = *include_bytes!("./chr/tiles.chr");
 
 #[panic_handler]
-fn panic(info: &core::panic::PanicInfo) -> ! {
+fn panic(_info: &core::panic::PanicInfo) -> ! {
     let mut p = 0xE0 as *mut u8;
-    let message = info.payload().downcast_ref::<&str>().unwrap_or(&"!!PANIC!!");
-    for ch in message.chars() {
+    // let message = info.payload().downcast_ref::<&str>().unwrap_or(&"!!PANIC!!");
+    for ch in "!!PANIC!!".chars() {
         unsafe {
             *p = ch as u8;
             p = p.add(1);

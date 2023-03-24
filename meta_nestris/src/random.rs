@@ -1,6 +1,6 @@
 use crate::piece::Piece;
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct Random {
     pub piece_counter: u8,
     pub last_piece: Piece,

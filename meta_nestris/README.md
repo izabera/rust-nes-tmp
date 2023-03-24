@@ -1,6 +1,6 @@
 # meta_nestris
 
-A largely functionally accurate recreation of NES Tetris in Rust.
+A largely functionally accurate recreation of NES Tetris in Rust, converted to #![no_std].
 
 ## Intentional differences from the base game
 
