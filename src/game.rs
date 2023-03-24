@@ -43,8 +43,7 @@ pub fn render() {
             ppu::draw_text(text);
         },
         State::GameplayState(state) => {
-
-    ppu::draw_text("GAME");
+            ppu::draw_text("GAME");
         },
     }
 }
